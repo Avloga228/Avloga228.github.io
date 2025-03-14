@@ -104,6 +104,21 @@ h1 {
     background-color: var(--dark-orange);
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero {
+    animation: fadeIn 1s ease-in-out;
+}
+
 
 /* Сторінка обладнання */
 .equipment-grid {
@@ -194,39 +209,97 @@ h1 {
 
 /* Сторінка оплати */
 .payment-form {
-    max-width: 400px;
-    margin: 0 auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 50px auto;
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.payment-form h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 .payment-form label {
     display: block;
     font-weight: bold;
     margin: 10px 0 5px;
+    color: #555;
 }
 
-.payment-form input {
-    width: 94.5%;
-    padding: 10px;
-    margin-bottom: 10px;
+/* Стилі для випадаючого списку */
+.payment-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
 }
 
+.payment-form select:focus {
+    border-color: var(--orange);
+    outline: none;
+}
+
+/* Стилі для полів вводу */
+.payment-form input {
+    width: 94.5%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+.payment-form input:focus {
+    border-color: var(--orange);
+    outline: none;
+}
+
+/* Стилі для кнопки */
 .payment-form button {
     width: 100%;
-    padding: 10px;
-    background: var(--orange);
+    padding: 12px;
+    background-color: var(--orange);
     color: white;
     border: none;
     border-radius: 5px;
+    font-size: 18px;
     cursor: pointer;
-    font-size: 16px;
+    transition: background-color 0.3s;
 }
 
+.payment-form button:hover {
+    background-color: var(--orange);
+}
+
+.payment-form button:active {
+    background-color: var(--orange);
+}
+
+/* Стилі для полів вводу, якщо вони тільки для читання */
+.payment-form input[readonly] {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+/* Стилі для полів вводу номера картки, терміну дії та CVV */
+.payment-form input[type="text"] {
+    cursor: pointer;
+}
+
+/* Загальні стилі для контейнера */
+.container {
+    padding: 20px;
+}
 
 footer {
     text-align: center;

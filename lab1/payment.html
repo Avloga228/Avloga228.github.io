@@ -24,6 +24,18 @@
     <main class="container">
         <h1>Оплата оренди</h1>
         <section class="payment-form">
+            <form>
+                <label for="equipment">Оберіть обладнання для оплати:</label>
+                <select id="equipment" name="equipment">
+                    <option value="roller">Ролики - 130 грн/день</option>
+                    <option value="football">Самокат - 100 грн/день</option>
+                </select>
+        
+                <label for="paymentAmount">Сума до сплати:</label>
+                <input type="text" id="paymentAmount" name="paymentAmount" value="200 грн" readonly>
+        
+            </form>
+
             <label>Ім'я на картці:</label>
             <input type="text" placeholder="Ім'я та прізвище" required>
 
