@@ -94,14 +94,14 @@ h1 {
     margin-top: 15px;
     padding: 10px 20px;
     font-size: 18px;
-    background-color: #ff6600;
+    background-color: var(--orange);
     color: white;
     text-decoration: none;
     border-radius: 5px;
 }
 
 .hero-btn:hover {
-    background-color: #cc5200;
+    background-color: var(--dark-orange);
 }
 
 
