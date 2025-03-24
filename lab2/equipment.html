@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оренда Спортивного Обладнання</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">SportRent</div>
+            <nav>
+                <ul>
+                    <li class="menu-item"><a href="equipment.html">Обладнання</a><div class="underline"></div></li>
+                    <li class="menu-item"><a href="orders.html">Мої оренди</a><div class="underline"></div></li>
+                    <li class="menu-item"><a href="payment.html">Оплата</a><div class="underline"></div></li>
+                    <li class="menu-item login"><a href="#">Вхід</a><div class="underline"></div></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <hero class="hero">
+        <div class="container">
+            <h1>Вітаємо в SportRent!</h1>
+            <p>Прокачай свої можливості – орендуй спортивне обладнання та насолоджуйся активним способом життя! 
+            Велосипеди, каяки, ролики, м'ячі та ще багато іншого – усе це доступне для оренди вже зараз!</p>
+            <button id="toggle-btn" class="hero-btn">Дізнатися про акції</button>
+            <div id="hidden-section" class="hidden-content">
+                <h2>Спеціальні пропозиції</h2>
+                <div class="promo-grid">
+                    <div class="promo-card">
+                        <h3>🎯 Вигідна пакетна оренда</h3>
+                        <p>Орендуйте 3 будь-які товари та отримайте знижку 20% на весь замовлення!</p>
+                    </div>
+                    <div class="promo-card">
+                        <h3>⏳ Довгострокова оренда</h3>
+                        <p>При оренді від 7 днів - знижка 15% на весь період!</p>
+                    </div>
+                    <div class="promo-card">
+                        <h3>👥 Дружня пропозиція</h3>
+                        <p>Приведіть друга і отримайте 10% знижку на наступне замовлення для обох!</p>
+                    </div>
+                </div>
+                <div class="newsletter">
+                    <h3>Підпишіться на наші новини</h3>
+                    <form>
+                        <input type="email" placeholder="Ваш email" required>
+                        <button type="submit">Підписатися</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </hero>
+    
+
+    <main class="container">
+        <h1>Обладнання для оренди</h1>
+        <section class="equipment-grid">
+            <div class="equipment-card">
+                <img src="bike.jpg" alt="Велосипед">
+                <div class="info">
+                    <h3>Велосипед</h3>
+                    <p>Ціна: <span class="price">200 грн/день</span></p>
+                    <button class="rent-button" data-id="1" data-name="Велосипед" data-price="200">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="ski.jpg" alt="Лижі">
+                <div class="info">
+                    <h3>Лижі</h3>
+                    <p>Ціна: <span class="price">300 грн/день</span></p>
+                    <button class="rent-button" data-id="2" data-name="Лижі" data-price="300">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="kayak.jpg" alt="Каяк">
+                <div class="info">
+                    <h3>Каяк</h3>
+                    <p>Ціна: <span class="price">500 грн/день</span></p>
+                    <button class="rent-button" data-id="3" data-name="Каяк" data-price="500">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="samokat.jpg" alt="Самокат">
+                <div class="info">
+                    <h3>Самокат</h3>
+                    <p>Ціна: <span class="price">100 грн/день</span></p>
+                    <button class="rent-button" data-id="4" data-name="Самокат" data-price="100">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="roliki.jpg" alt="Ролики">
+                <div class="info">
+                    <h3>Ролики</h3>
+                    <p>Ціна: <span class="price">130 грн/день</span></p>
+                    <button class="rent-button" data-id="5" data-name="Ролики" data-price="130">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="football_myatch.jpg" alt="Футбольний м'яч">
+                <div class="info">
+                    <h3>Футбольний м'яч</h3>
+                    <p>Ціна: <span class="price">50 грн/день</span></p>
+                    <button class="rent-button" data-id="6" data-name="Футбольний м'яч" data-price="50">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="basketball_myatch.jpg" alt="Баскетбольний м'яч">
+                <div class="info">
+                    <h3>Баскетбольний м'яч</h3>
+                    <p>Ціна: <span class="price">50 грн/день</span></p>
+                    <button class="rent-button" data-id="7" data-name="Баскетбольний м'яч" data-price="50">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="volleyball_myatch.jpg" alt="Волейбольний м'яч">
+                <div class="info">
+                    <h3>Волейбольний м'яч</h3>
+                    <p>Ціна: <span class="price">50 грн/день</span></p>
+                    <button class="rent-button" data-id="8" data-name="Волейбольний м'яч" data-price="50">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="pingpong.jpg" alt="Ракетки та м'яч для пінгпонгу">
+                <div class="info">
+                    <h3>Ракетки та м'яч для пінгпонгу</h3>
+                    <p>Ціна: <span class="price">120 грн/день</span></p>
+                    <button class="rent-button" data-id="9" data-name="Ракетки та м'яч для пінгпонгу" data-price="120">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="ganteli.jpg" alt="Гантелі">
+                <div class="info">
+                    <h3>Гантелі</h3>
+                    <p>Ціна: <span class="price">100 грн/день</span></p>
+                    <button class="rent-button" data-id="10" data-name="Гантелі" data-price="100">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+            <div class="equipment-card">
+                <img src="kilim.jpg" alt="Фітнес-килимок">
+                <div class="info">
+                    <h3>Фітнес-килимок</h3>
+                    <p>Ціна: <span class="price">50 грн/день</span></p>
+                    <button class="rent-button" data-id="11" data-name="Фітнес-килимок" data-price="50">
+                        Орендувати
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 SportRent</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
