@@ -467,7 +467,7 @@ footer {
 
     header {
         text-align: center;
-        padding: 15px 10px;
+        padding: 10px;
     }
 
     .logo {
@@ -482,13 +482,15 @@ footer {
 
     nav ul li {
         display: block;
-        margin: 8px 0;
+        margin: 5px 0;
     }
 
     nav ul li a {
-        font-size: 14px;
+        font-size: 12px;
         padding: 8px 12px;
-        display: inline-block;
+        display: flex;
+        align-items: flex-end; /* Вирівнювання тексту донизу */
+        height: 25px; /* Висота блоку, що дозволяє тексту бути внизу */
     }
 
     .login {
