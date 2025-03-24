@@ -457,7 +457,6 @@ footer {
     }
 }
 
-
 /* Адаптивність для телефонів */
 @media (max-width: 480px) {
     .container {
@@ -468,16 +467,19 @@ footer {
     header {
         text-align: center;
         padding: 10px;
+        white-space: nowrap;
     }
 
     .logo {
-        font-size: 22px;
+        font-size: 16px;
         font-weight: bold;
+        height: 9px;
     }
 
     nav ul {
         text-align: center;
         padding: 0;
+        gap: 5px
     }
 
     nav ul li {
@@ -487,14 +489,14 @@ footer {
 
     nav ul li a {
         font-size: 12px;
-        padding: 8px 12px;
+        padding: 8px 8px;
         display: flex;
         align-items: flex-end; /* Вирівнювання тексту донизу */
         height: 25px; /* Висота блоку, що дозволяє тексту бути внизу */
     }
 
-    .login {
-        margin-top: 10px;
+    nav ul .login {
+        margin-left: 0px;
     }
 
     .equipment-grid {
