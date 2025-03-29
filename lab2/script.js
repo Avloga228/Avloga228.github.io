@@ -1,3 +1,307 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("equipment-modal");
+    const modalImage = document.getElementById("modal-image");
+    const modalTitle = document.getElementById("modal-title");
+    const modalDescription = document.getElementById("modal-description");
+    const modalPrice = document.getElementById("modal-price");
+    const modalQuantity = document.getElementById("modal-quantity");
+    const closeModal = document.querySelector(".close");
+    const rentButtonModal = document.getElementById("rent-button-modal");
+
+    // Функція отримання актуального inventory
+    function getInventory() {
+        return JSON.parse(localStorage.getItem("inventory")) || {};
+    }
+
+    // Функція відкриття модального вікна з оновленням даних
+    function openModal(imageName) {
+        const equipmentData = JSON.parse(localStorage.getItem("equipmentData")) || {};
+        const inventory = getInventory();
+        const data = equipmentData[imageName];
+
+        if (data) {
+            modalImage.src = imageName;
+            modalTitle.textContent = data.title;
+            modalDescription.textContent = data.description;
+            modalPrice.textContent = data.price;
+            modalQuantity.textContent = inventory[imageName] || 0; // Оновлюємо кількість в реальному часі
+            modal.style.display = "flex";
+        }
+    }
+
+    // Додаємо обробники подій для відкриття модального вікна
+    document.querySelectorAll(".equipment-card img").forEach(img => {
+        img.addEventListener("click", function () {
+            openModal(img.getAttribute("src"));
+        });
+    });
+
+    // Закриття модального вікна
+    closeModal.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+    // Оновлення кількості в модальному вікні при зміні inventory в localStorage
+    window.addEventListener("storage", function (event) {
+        if (event.key === "inventory" && modal.style.display === "flex") {
+            modalQuantity.textContent = getInventory()[modalImage.src] || 0;
+        }
+    });
+});
+
+
+// Отримання інвентарю з localStorage
+function getInventory() {
+    return JSON.parse(localStorage.getItem("inventory")) || {};
+}
+
+// Оновлення equipmentData на основі inventory
+function updateEquipmentData() {
+    let inventory = getInventory();
+
+    let equipmentData = {
+        "bike.jpg": {
+            title: "Велосипед",
+            description: "Зручний міський велосипед з міцною рамою і амортизацією, ідеально підходить для поїздок по місту або лісових стежках.",
+            price: "200",
+            quantity: inventory["bike.jpg"]
+        },
+        "ski.jpg": {
+            title: "Лижі",
+            description: "Професійні лижі для катання на схилах з високоякісним кріпленням.",
+            price: "300",
+            quantity: inventory["ski.jpg"]
+        },
+        "kayak.jpg": {
+            title: "Каяк",
+            description: "Легкий та стійкий двомісний каяк для сплавів річками та озерами.",
+            price: "500",
+            quantity: inventory["kayak.jpg"]
+        },
+        "samokat.jpg": {
+            title: "Самокат",
+            description: "Маневрений самокат із міцними колесами, ідеальний для прогулянок містом.",
+            price: "100",
+            quantity: inventory["samokat.jpg"]
+        },
+        "roliki.jpg": {
+            title: "Ролики",
+            description: "Зручні та безпечні ролики для катання по рівних дорогах та скейтпарках.",
+            price: "130",
+            quantity: inventory["roliki.jpg"]
+        },
+        "football_myatch.jpg": {
+            title: "Футбольний м'яч",
+            description: "Офіційний футбольний м'яч з високоякісного матеріалу, стійкий до зносу.",
+            price: "50",
+            quantity: inventory["football_myatch.jpg"]
+        },
+        "basketball_myatch.jpg": {
+            title: "Баскетбольний м'яч",
+            description: "Професійний баскетбольний м'яч з чудовим зчепленням для гри як на відкритих майданчиках, так і в залах.",
+            price: "50",
+            quantity: inventory["basketball_myatch.jpg"]
+        },
+        "volleyball_myatch.jpg": {
+            title: "Волейбольний м'яч",
+            description: "Легкий та міцний волейбольний м'яч для ігор на пляжі чи у спортзалі.",
+            price: "50",
+            quantity: inventory["volleyball_myatch.jpg"]
+        },
+        "pingpong.jpg": {
+            title: "Ракетки та м'яч для пінгпонгу",
+            description: "Набір якісних ракеток та м'ячів для настільного тенісу.",
+            price: "120",
+            quantity: inventory["pingpong.jpg"]
+        },
+        "ganteli.jpg": {
+            title: "Гантелі",
+            description: "Компактні гантелі для домашніх тренувань різної ваги.",
+            price: "100",
+            quantity: inventory["ganteli.jpg"]
+        },
+        "kilim.jpg": {
+            title: "Фітнес-килимок",
+            description: "Зручний і м'який килимок для йоги та фітнесу.",
+            price: "50",
+            quantity: inventory["kilim.jpg"]
+        }
+    };
+
+    localStorage.setItem("equipmentData", JSON.stringify(equipmentData));
+}
+
+// Викликаємо оновлення даних щоразу при завантаженні сторінки
+updateEquipmentData();
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Ініціалізація inventory у localStorage
+    if (!localStorage.getItem("inventory")) {
+        const initialInventory = {
+            "bike.jpg": 5,
+            "ski.jpg": 3,
+            "kayak.jpg": 2,
+            "samokat.jpg": 4,
+            "roliki.jpg": 6,
+            "football_myatch.jpg": 10,
+            "basketball_myatch.jpg": 7,
+            "volleyball_myatch.jpg": 5,
+            "pingpong.jpg": 8,
+            "ganteli.jpg": 6,
+            "kilim.jpg": 12
+        };
+        localStorage.setItem("inventory", JSON.stringify(initialInventory));
+    }
+
+    // Функція оновлення кількості інвентарю на сторінці
+    function updateInventoryDisplay() {
+        let inventory = JSON.parse(localStorage.getItem("inventory")) || {};
+        document.querySelectorAll(".equipment-card").forEach(card => {
+            let imgSrc = card.querySelector("img").getAttribute("src");
+            let quantityElement = card.querySelector(".quantity");
+            if (quantityElement) {
+                quantityElement.textContent = `Доступно: ${inventory[imgSrc] || 0}`;
+            }
+        });
+    }
+
+    // Функція додавання замовлення
+    function addOrder(itemName, price, imageSrc) {
+        let inventory = JSON.parse(localStorage.getItem("inventory")) || {};
+        if (!inventory[imageSrc] || inventory[imageSrc] <= 0) {
+            alert(`На жаль, ${itemName} наразі недоступний для оренди.`);
+            return;
+        }
+
+        inventory[imageSrc]--;
+        localStorage.setItem("inventory", JSON.stringify(inventory));
+        updateInventoryDisplay(); // Оновлюємо відображення інвентарю
+
+        const newOrder = {
+            name: itemName,
+            date: new Date().toLocaleDateString(),
+            duration: 0,
+            price: price,
+            status: "очікує оплати",
+            image: imageSrc
+        };
+
+        let rentedItems = JSON.parse(localStorage.getItem("rentedItems")) || [];
+        rentedItems.push(newOrder);
+        localStorage.setItem("rentedItems", JSON.stringify(rentedItems));
+
+        alert(`${itemName} додано до ваших оренд!`);
+    }
+
+    // Додаємо обробник подій для кнопок оренди
+    document.querySelectorAll(".rent-button").forEach(button => {
+        button.addEventListener("click", function () {
+            addOrder(this.dataset.name, parseInt(this.dataset.price), this.dataset.image);
+        });
+    });
+
+    // Обробник для кнопки оренди в модальному вікні
+    const rentButtonModal = document.getElementById("rent-button-modal");
+    if (rentButtonModal) {
+        rentButtonModal.addEventListener("click", function () {
+            const modalImage = document.getElementById("modal-image");
+            addOrder(
+                document.getElementById("modal-title").textContent,
+                parseInt(document.getElementById("modal-price").textContent),
+                modalImage.getAttribute("src")
+            );
+            document.getElementById("equipment-modal").style.display = "none";
+        });
+    }
+
+    // Автоматично оновлюємо інвентар, якщо змінилися дані в localStorage
+    window.addEventListener("storage", function (event) {
+        if (event.key === "inventory") {
+            updateInventoryDisplay();
+        }
+    });
+
+    updateInventoryDisplay(); // Початкове оновлення після завантаження сторінки
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    let rentedItems = JSON.parse(localStorage.getItem("rentedItems")) || [];
+    const ordersContainer = document.getElementById("orders-list"); // Контейнер для списку оренд
+
+    function getInventory() {
+        return JSON.parse(localStorage.getItem("inventory")) || {};
+    }
+
+    function setInventory(inventory) {
+        localStorage.setItem("inventory", JSON.stringify(inventory));
+    }
+
+    function renderOrders() {
+        ordersContainer.innerHTML = "";
+        if (rentedItems.length === 0) {
+            ordersContainer.innerHTML = "<p>У вас поки що немає оренд.</p>";
+            return;
+        }
+
+        rentedItems.forEach((order, i) => {
+            const orderDiv = document.createElement("div");
+            orderDiv.classList.add("order");
+
+            orderDiv.innerHTML = `
+                <div class="con-stan">
+                    <h3>${order.name}</h3>
+                    <button class="delete-order" data-index="${i}">❌</button>
+                </div>
+                <p>Дата оренди: ${order.date}</p>
+                <p>Тривалість: ${order.duration} дні</p>
+                <p>Сума: ${order.price} грн</p>
+                <div class="con-stan">
+                    <p>Стан оренди: </p>
+                    <p class="stan">${order.status}</p>
+                </div>
+                ${order.status === "очікує оплати" ? `<a href="payment.html"><button id="payment-button">Оплатити</button></a>` : ""}
+            `;
+            
+            ordersContainer.appendChild(orderDiv);
+        });
+    }
+
+    // Функція для видалення замовлення та повернення в інвентар
+    function deleteOrder(index) {
+        const item = rentedItems[index];
+        if (confirm(`Ви впевнені, що хочете видалити '${item.name}' зі списку?`)) {
+            rentedItems.splice(index, 1);
+            localStorage.setItem("rentedItems", JSON.stringify(rentedItems));
+
+            // Повертаємо товар в інвентар
+            let inventory = getInventory();
+            inventory[item.image] = (inventory[item.image] || 0) + 1;
+            setInventory(inventory);
+
+            renderOrders();
+        }
+    }
+
+    // Обробник подій для кнопок видалення
+    ordersContainer.addEventListener("click", function (event) {
+        if (event.target.classList.contains("delete-order")) {
+            const index = event.target.getAttribute("data-index");
+            deleteOrder(index);
+        }
+    });
+
+    renderOrders();
+});
+
+
 function initMenuHover() {
     const menuItems = document.querySelectorAll(".menu-item");
 
@@ -32,70 +336,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const rentButtons = document.querySelectorAll(".rent-button");
-
-    for (let i = 0; i < rentButtons.length; i++) {
-        rentButtons[i].addEventListener("click", function () {
-            const itemName = this.dataset.name;
-            const rentDate = new Date().toLocaleDateString(); // Поточна дата
-            const duration = 0; // Значення за замовчуванняс
-
-            // Отримуємо ціну з атрибута data-price
-            const price = parseInt(this.dataset.price); // Перетворюємо на число
-
-            const newOrder = {
-                name: itemName,
-                date: rentDate,
-                duration: duration,
-                price: price,
-                status: "очікує оплати"
-            };
-
-            let rentedItems = JSON.parse(localStorage.getItem("rentedItems")) || [];
-            rentedItems.push(newOrder);
-            localStorage.setItem("rentedItems", JSON.stringify(rentedItems));
-
-            alert(`${itemName} додано до ваших оренд!`);
-        });
-    };
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    let rentedItems = JSON.parse(localStorage.getItem("rentedItems")) || [];
-    const ordersContainer = document.getElementById("orders-list"); // Контейнер для списку оренд
-
-    let i = 0;
-
-    do {
-        if (rentedItems.length === 0) {
-            ordersContainer.innerHTML = "<p>У вас поки що немає оренд.</p>";
-            break; // Вихід із циклу, якщо масив порожній
-        }
-
-        const order = rentedItems[i];
-
-        const orderDiv = document.createElement("div");
-        orderDiv.classList.add("order");
-
-        orderDiv.innerHTML = `
-            <h3>${order.name}</h3>
-            <p>Дата оренди: ${order.date}</p>
-            <p>Тривалість: ${order.duration} дні</p>
-            <p>Сума: ${order.price} грн</p>
-            <div class="con-stan">
-                <p>Стан оренди: </p>
-                <p class="stan">${order.status}</p>
-            </div>
-            ${order.status === "очікує оплати" ? `<a href="payment.html"><button>Оплатити</button></a>` : ""}
-        `;
-
-        ordersContainer.appendChild(orderDiv);
-
-        i++;
-    } while (i < rentedItems.length);
-});
-
 function getDayLabel(duration) {
     if (duration === 1) {
         return 'день';
@@ -111,6 +351,12 @@ function clearRentedItems() {
     alert("Всі оренди були очищені!");
 }
 
+function clearEquipmentData() {
+    localStorage.removeItem("equipmentData"); // Видаляємо дані повністю
+    alert("Всі дані були очищені!");
+}
+
+//clearEquipmentData();
 //clearRentedItems();
 
 document.addEventListener("DOMContentLoaded", function () {

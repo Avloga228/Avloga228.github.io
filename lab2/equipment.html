@@ -54,6 +54,18 @@
         </div>
     </hero>
     
+    <div id="equipment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img id="modal-image" src="" alt="Обладнання">
+            <h2 id="modal-title"></h2>
+            <p id="modal-description"></p>
+            <p>Ціна: <span id="modal-price"></span> грн/день</p>
+            <p>Доступно: <span id="modal-quantity"></span> шт.</p>
+            <button id="rent-button-modal">Орендувати</button>
+        </div>
+    </div>
+    
 
     <main class="container">
         <h1>Обладнання для оренди</h1>
@@ -63,7 +75,7 @@
                 <div class="info">
                     <h3>Велосипед</h3>
                     <p>Ціна: <span class="price">200 грн/день</span></p>
-                    <button class="rent-button" data-id="1" data-name="Велосипед" data-price="200">
+                    <button class="rent-button" data-id="1" data-name="Велосипед" data-price="200" data-image="bike.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -73,7 +85,7 @@
                 <div class="info">
                     <h3>Лижі</h3>
                     <p>Ціна: <span class="price">300 грн/день</span></p>
-                    <button class="rent-button" data-id="2" data-name="Лижі" data-price="300">
+                    <button class="rent-button" data-id="2" data-name="Лижі" data-price="300" data-image="ski.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -83,7 +95,7 @@
                 <div class="info">
                     <h3>Каяк</h3>
                     <p>Ціна: <span class="price">500 грн/день</span></p>
-                    <button class="rent-button" data-id="3" data-name="Каяк" data-price="500">
+                    <button class="rent-button" data-id="3" data-name="Каяк" data-price="500" data-image="kayak.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -93,7 +105,7 @@
                 <div class="info">
                     <h3>Самокат</h3>
                     <p>Ціна: <span class="price">100 грн/день</span></p>
-                    <button class="rent-button" data-id="4" data-name="Самокат" data-price="100">
+                    <button class="rent-button" data-id="4" data-name="Самокат" data-price="100" data-image="samokat.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -103,7 +115,7 @@
                 <div class="info">
                     <h3>Ролики</h3>
                     <p>Ціна: <span class="price">130 грн/день</span></p>
-                    <button class="rent-button" data-id="5" data-name="Ролики" data-price="130">
+                    <button class="rent-button" data-id="5" data-name="Ролики" data-price="130" data-image="roliki.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -113,7 +125,7 @@
                 <div class="info">
                     <h3>Футбольний м'яч</h3>
                     <p>Ціна: <span class="price">50 грн/день</span></p>
-                    <button class="rent-button" data-id="6" data-name="Футбольний м'яч" data-price="50">
+                    <button class="rent-button" data-id="6" data-name="Футбольний м'яч" data-price="50" data-image="football_myatch.jpg"> 
                         Орендувати
                     </button>
                 </div>
@@ -123,7 +135,7 @@
                 <div class="info">
                     <h3>Баскетбольний м'яч</h3>
                     <p>Ціна: <span class="price">50 грн/день</span></p>
-                    <button class="rent-button" data-id="7" data-name="Баскетбольний м'яч" data-price="50">
+                    <button class="rent-button" data-id="7" data-name="Баскетбольний м'яч" data-price="50" data-image="basketball_myatch.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -133,7 +145,7 @@
                 <div class="info">
                     <h3>Волейбольний м'яч</h3>
                     <p>Ціна: <span class="price">50 грн/день</span></p>
-                    <button class="rent-button" data-id="8" data-name="Волейбольний м'яч" data-price="50">
+                    <button class="rent-button" data-id="8" data-name="Волейбольний м'яч" data-price="50" data-image="volleyball_myatch.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -143,7 +155,7 @@
                 <div class="info">
                     <h3>Ракетки та м'яч для пінгпонгу</h3>
                     <p>Ціна: <span class="price">120 грн/день</span></p>
-                    <button class="rent-button" data-id="9" data-name="Ракетки та м'яч для пінгпонгу" data-price="120">
+                    <button class="rent-button" data-id="9" data-name="Ракетки та м'яч для пінгпонгу" data-price="120" data-image="pingpong.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -153,7 +165,7 @@
                 <div class="info">
                     <h3>Гантелі</h3>
                     <p>Ціна: <span class="price">100 грн/день</span></p>
-                    <button class="rent-button" data-id="10" data-name="Гантелі" data-price="100">
+                    <button class="rent-button" data-id="10" data-name="Гантелі" data-price="100" data-image="ganteli.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -163,7 +175,7 @@
                 <div class="info">
                     <h3>Фітнес-килимок</h3>
                     <p>Ціна: <span class="price">50 грн/день</span></p>
-                    <button class="rent-button" data-id="11" data-name="Фітнес-килимок" data-price="50">
+                    <button class="rent-button" data-id="11" data-name="Фітнес-килимок" data-price="50" data-image="kilim.jpg">
                         Орендувати
                     </button>
                 </div>
@@ -172,8 +184,27 @@
     </main>
 
     <footer>
-        <p>© 2025 SportRent</p>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Про нас</h3>
+                <p>SportRent - оренда спортивного обладнання швидко та зручно!</p>
+                <p>Адреса: вул. Спортивна, 12, Київ, Україна</p>
+            </div>
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>Телефон: <a href="tel:+380991234567">+380 99 123 45 67</a></p>
+                <p>Email: <a href="mailto:support@sportrent.com">support@sportRent.com</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Соціальні мережі</h3>
+                <a href="#">Facebook</a> | 
+                <a href="#">Instagram</a> | 
+                <a href="#">Telegram</a>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 SportRent</p>
     </footer>
+    
 
     <script src="script.js"></script>
 </body>
