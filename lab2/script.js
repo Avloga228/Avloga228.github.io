@@ -8,31 +8,34 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeModal = document.querySelector(".close");
     const rentButtonModal = document.getElementById("rent-button-modal");
 
+    // Завантажуємо дані про обладнання з localStorage
+    const equipmentData = JSON.parse(localStorage.getItem("equipmentData"));
+    
     // Функція отримання актуального inventory
     function getInventory() {
         return JSON.parse(localStorage.getItem("inventory")) || {};
     }
 
-    // Функція відкриття модального вікна з оновленням даних
-    function openModal(imageName) {
-        const equipmentData = JSON.parse(localStorage.getItem("equipmentData")) || {};
-        const inventory = getInventory();
-        const data = equipmentData[imageName];
+    // Відкриття модального вікна при натисканні на картку
+    document.querySelectorAll(".equipment-card").forEach(card => {
+        card.addEventListener("click", function () {
+            // Якщо натиснуто на кнопку оренди, не відкриваємо модальне вікно
+            if (event.target.classList.contains("rent-button")) {
+                return; // Просто вийти, не відкриваючи модальне вікно
+            }
+            
+            // Якщо натиснуто не на кнопку оренди, відкриваємо модальне вікно
+            const imageName = card.querySelector("img").getAttribute("src");
+            const data = equipmentData[imageName];
 
-        if (data) {
-            modalImage.src = imageName;
-            modalTitle.textContent = data.title;
-            modalDescription.textContent = data.description;
-            modalPrice.textContent = data.price;
-            modalQuantity.textContent = inventory[imageName] || 0; // Оновлюємо кількість в реальному часі
-            modal.style.display = "flex";
-        }
-    }
-
-    // Додаємо обробники подій для відкриття модального вікна
-    document.querySelectorAll(".equipment-card img").forEach(img => {
-        img.addEventListener("click", function () {
-            openModal(img.getAttribute("src"));
+            if (data) {
+                modalImage.src = imageName;
+                modalTitle.textContent = data.title;
+                modalDescription.textContent = data.description;
+                modalPrice.textContent = data.price;
+                modalQuantity.textContent = data.quantity;
+                modal.style.display = "flex";
+            }
         });
     });
 

@@ -252,13 +252,20 @@ input:valid, select:valid {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+/* Ефект при наведенні */
+.equipment-card:hover {
+    transform: translateY(-10px); /* Піднімаємо картку вверх на 10px */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Збільшуємо тінь для кращого ефекту */
 }
 
 .equipment-card img {
     width: 100%;
     height: auto;
     border-radius: 5px;
-    cursor: pointer;
 }
 
 /* Фон модального вікна */
