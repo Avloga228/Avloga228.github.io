@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const modal = document.getElementById("equipment-modal");
     const modalImage = document.getElementById("modal-image");
@@ -404,36 +406,42 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const selectedItem = rentedItems.find(item => item.name === selectedItemName);
-        if (selectedItem) {
-            const totalAmount = selectedItem.price * rentalDuration;
+        if (selectedItemName === "all") {
+            const totalAmount = itemsToPay.reduce((sum, item) => sum + item.price, 0) * rentalDuration;
             paymentAmountInput.value = `${totalAmount} грн`;
+        } else {
+            const selectedItem = rentedItems.find(item => item.name === selectedItemName);
+            if (selectedItem) {
+                const totalAmount = selectedItem.price * rentalDuration;
+                paymentAmountInput.value = `${totalAmount} грн`;
+            }
         }
     }
 
     // Обробка форми оплати
+    const allOption = document.createElement("option");
+    allOption.value = "all";
+    allOption.textContent = "Усе";
+    equipmentSelect.insertBefore(allOption, equipmentSelect.firstChild);
+
+    // Оновлюємо функцію для обробки оплати
     paymentForm.addEventListener("submit", function(event) {
         event.preventDefault();
-        
-        // Очищаємо попередні помилки
+
         clearErrors();
-        
-        // Валідація форми
+
         let isValid = true;
 
-        // Перевірка вибору обладнання
         if (equipmentSelect.selectedIndex === -1) {
             showError(equipmentSelect, "Будь ласка, оберіть обладнання");
             isValid = false;
         }
 
-        // Перевірка тривалості оренди
         if (!rentalDurationInput.value || parseInt(rentalDurationInput.value) <= 0) {
             showError(rentalDurationInput, "Введіть коректну кількість днів");
             isValid = false;
         }
 
-        // Перевірка даних картки
         if (!cardName.value.trim()) {
             showError(cardName, "Введіть ім'я на картці");
             isValid = false;
@@ -454,34 +462,37 @@ document.addEventListener("DOMContentLoaded", function () {
             isValid = false;
         }
 
-        // Якщо форма не валідна - припиняємо виконання
         if (!isValid) {
             return;
         }
 
-        // Якщо все валідне - обробляємо оплату
-        const selectedItemName = equipmentSelect.value;
         const rentalDuration = parseInt(rentalDurationInput.value);
 
-        // Оновлення статусу оренди
-        const updatedItems = rentedItems.map(item => {
-            if (item.name === selectedItemName) {
-                return {
-                    ...item,
-                    status: "оплачено",
-                    duration: rentalDuration,
-                    paymentDate: new Date().toLocaleDateString()
-                };
-            }
-            return item;
-        });
+        if (equipmentSelect.value === "all") {
+            rentedItems.forEach(item => {
+                if (item.status === "очікує оплати") {
+                    item.status = "оплачено";
+                    item.duration = rentalDuration;
+                    item.paymentDate = new Date().toLocaleDateString();
+                }
+            });
+        } else {
+            const selectedItemName = equipmentSelect.value;
+            rentedItems.some((item, index) => {
+                if (item.name === selectedItemName && item.status === "очікує оплати") {
+                    item.status = "оплачено";
+                    item.duration = rentalDuration;
+                    item.paymentDate = new Date().toLocaleDateString();
+                    return true; 
+                }
+            });
+        }
 
-        localStorage.setItem("rentedItems", JSON.stringify(updatedItems));
+        localStorage.setItem("rentedItems", JSON.stringify(rentedItems));
         alert("Оплата успішно проведена!");
         paymentForm.reset();
         paymentAmountInput.value = "0 грн";
-        
-        // Перенаправлення на сторінку оренд
+
         window.location.href = "orders.html";
     });
 

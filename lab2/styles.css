@@ -371,6 +371,25 @@ input:valid, select:valid {
     height: 30px;
     gap: 6px;
 }
+button {
+    padding: 10px 20px;
+    background-color: var(--orange);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--dark-orange);
+}
+
+#pay-all-btn {
+    margin: 20px auto;
+    display: block;
+    padding: 15px 30px;
+}
 
 #payment-button {
     margin-top: 15px; 

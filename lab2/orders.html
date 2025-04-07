@@ -27,6 +27,11 @@
         </section>
     </main>
 
+
+    <div class="container">
+        <button id="pay-all-btn" class="payment-button">Оплатити все</button>
+    </div>
+
     <footer>
         <div class="footer-container">
             <div class="footer-section">
@@ -50,5 +55,10 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        document.getElementById('pay-all-btn').addEventListener('click', function() {
+            window.location.href = 'payment.html';
+        });
+    </script>
 </body>
 </html>
