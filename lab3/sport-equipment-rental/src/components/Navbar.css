@@ -1,0 +1,182 @@
+:root {
+  --orange: #ff782b;
+  --dark-orange: #da6622;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 5px 0;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 120px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  height: 100%;
+  align-items: center;
+}
+
+nav ul li {
+  display: inline;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 3px 0;
+  display: block;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: white;
+}
+
+nav ul .login {
+  margin-left: 30px;
+}
+
+.menu-item {
+  position: relative;
+  display: inline-block;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.underline {
+  position: absolute;
+  bottom: -3px;
+  left: -5px;
+  width: 40%;
+  height: 2px;
+  background-color: var(--orange);
+  visibility: hidden;
+  transition: visibility 0.3s, opacity 0.3s ease;
+  opacity: 0;
+}
+
+/* Активний стан для NavLink */
+nav ul li a.active {
+  color: var(--orange);
+}
+
+nav ul li a.active + .underline {
+  visibility: visible;
+  opacity: 1;
+}
+
+nav ul li a:hover + .underline {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Адаптивність для планшетів */
+@media (min-width: 481px) and (max-width: 820px) {
+  header {
+    text-align: left;
+    padding: 8px 0;
+  }
+
+  .header-container {
+    height: 50px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  nav ul {
+    text-align: center;
+    padding: 0;
+  }
+
+  nav ul li a {
+    font-size: 15px;
+    padding: 4px 0;
+  }
+
+  nav ul li {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+  }
+}
+
+/* Адаптивність для телефонів */
+@media (max-width: 480px) {
+  header {
+    text-align: center;
+    padding: 10px 0;
+    white-space: nowrap;
+  }
+
+  .header-container {
+    height: auto;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px 0;
+  }
+
+  .logo {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    justify-content: center;
+  }
+
+  nav ul {
+    text-align: center;
+    padding: 0;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  nav ul li {
+    display: flex;
+    align-items: center;
+    margin: 3px 0;
+  }
+
+  nav ul li a {
+    font-size: 14px;
+    padding: 5px 8px;
+    display: block;
+    align-items: center;
+  }
+
+  nav ul .login {
+    margin-left: 0px;
+  }
+
+  .underline {
+    bottom: -2px;
+  }
+} 

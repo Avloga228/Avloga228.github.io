@@ -1,0 +1,277 @@
+.rentals-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.rentals-page h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+  font-size: 2.2rem;
+  position: relative;
+}
+
+.rentals-page h1::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: var(--orange);
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+}
+
+.rentals-content {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.order {
+  display: flex;
+  gap: 30px;
+  padding: 25px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.order:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.order img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.order-details {
+  flex: 1;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.order-info h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.order-info p {
+  margin: 10px 0;
+  color: #555;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+.status-badge.очікує-оплати {
+  background-color: #ffefe3;
+  color: var(--dark-orange);
+}
+
+.status-badge.оплачено {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.order-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.order-actions button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+}
+
+.order-actions button:first-child {
+  background-color: #ff782b;
+  color: white;
+  flex: 2;
+}
+
+.order-actions button:first-child:hover {
+  background-color: #da6622;
+}
+
+.delete-order {
+  background-color: #dc3545;
+  color: white;
+  flex: 1;
+}
+
+.delete-order:hover {
+  background-color: #c82333;
+}
+
+.pay-all-container {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px dashed #ddd;
+}
+
+#pay-all-btn {
+  padding: 15px 35px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: var(--orange);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 120, 43, 0.3);
+  transition: all 0.3s;
+}
+
+#pay-all-btn:hover {
+  background-color: var(--dark-orange);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 120, 43, 0.4);
+}
+
+.empty-rentals {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-rentals-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.empty-rentals h2 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.6rem;
+}
+
+.empty-rentals p {
+  color: #666;
+  font-size: 1.1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.empty-rentals a {
+  color: var(--orange);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.empty-rentals a:hover {
+  color: var(--dark-orange);
+  text-decoration: underline;
+}
+
+/* Адаптивні стилі */
+@media (max-width: 768px) {
+  .rentals-page {
+    padding: 1rem;
+  }
+
+  .rentals-content {
+    padding: 1rem;
+  }
+
+  .order {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .order img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .order-actions {
+    flex-direction: column;
+  }
+
+  .order-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .rentals-page {
+    padding: 0.5rem;
+  }
+
+  .rentals-content {
+    padding: 0.5rem;
+  }
+
+  .order {
+    padding: 15px;
+  }
+
+  .order img {
+    height: 150px;
+  }
+  
+  .order-info h3 {
+    font-size: 1.3rem;
+  }
+  
+  .status-badge {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+  }
+  
+  .pay-all-container {
+    margin-top: 30px;
+    padding-top: 20px;
+  }
+  
+  #pay-all-btn {
+    padding: 12px 28px;
+    font-size: 1rem;
+  }
+} 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оплата</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">SportRent</div>
+            <nav>
+                <ul>
+                    <li class="menu-item"><a href="equipment.html">Обладнання</a><div class="underline"></div></li>
+                    <li class="menu-item"><a href="orders.html">Мої оренди</a><div class="underline"></div></li>
+                    <li class="menu-item"><a href="payment.html">Оплата</a><div class="underline"></div></li>
+                    <li class="menu-item login"><a href="#">Вхід</a><div class="underline"></div></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Оплата оренди</h1>
+        <section class="payment-form">
+            <form id="payment-form">
+                <label for="equipment">Оберіть обладнання для оплати:</label>
+                <select id="equipment" name="equipment"></select>
+        
+                <label for="rental-duration">Бажана кількість днів оренди:</label>
+                <input type="number" id="rental-duration" name="rental-duration" min="1" placeholder="Введіть кількість днів">
+
+                <label for="paymentAmount">Сума до сплати:</label>
+                <input type="text" id="paymentAmount" name="paymentAmount" value="0 грн" readonly>
+            
+                <label>Ім'я на картці:</label>
+                <input type="text" placeholder="Ім'я та прізвище" required>
+    
+                <label>Номер картки:</label>
+                <input type="text" placeholder="1234 5678 9012 3456" required>
+    
+                <label>Термін дії:</label>
+                <input type="text" placeholder="DD/MM/YY" required>
+    
+                <label>CVV:</label>
+                <input type="text" placeholder="123" required>
+    
+                <button type="submit">Оплатити</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Про нас</h3>
+                <p>SportRent - оренда спортивного обладнання швидко та зручно!</p>
+                <p>Адреса: вул. Спортивна, 12, Київ, Україна</p>
+            </div>
+            <div class="footer-section">
+                <h3>Контакти</h3>
+                <p>Телефон: <a href="tel:+380991234567">+380 99 123 45 67</a></p>
+                <p>Email: <a href="mailto:support@sportrent.com">support@sportRent.com</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Соціальні мережі</h3>
+                <a href="#">Facebook</a> | 
+                <a href="#">Instagram</a> | 
+                <a href="#">Telegram</a>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 SportRent</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
