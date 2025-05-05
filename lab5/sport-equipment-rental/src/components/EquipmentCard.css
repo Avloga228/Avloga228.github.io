@@ -1,0 +1,85 @@
+.equipment-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.equipment-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.equipment-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
+}
+
+.equipment-card h3 {
+  margin: 10px 0;
+  color: #333;
+}
+
+.equipment-card p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.equipment-card .price {
+  font-weight: bold;
+  color: var(--orange);
+}
+
+.equipment-card .quantity {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.equipment-card button {
+  padding: 10px;
+  background: var(--orange);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.equipment-card button:hover {
+  background-color: var(--dark-orange);
+}
+
+.equipment-card button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .equipment-card {
+    padding: 10px;
+  }
+
+  .equipment-card h3 {
+    font-size: 1rem;
+  }
+
+  .equipment-card p {
+    font-size: 0.9rem;
+  }
+
+  .equipment-card button {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+} 

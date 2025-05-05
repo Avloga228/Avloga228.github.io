@@ -1,0 +1,9 @@
+# Firebase Configuration
+# Замініть значення на ті, що знаходяться у вашому файлі сервісного акаунту Firebase
+FIREBASE_PROJECT_ID=sportrent-ba741
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@sportrent-ba741.iam.gserviceaccount.com
+# ВАЖЛИВО: Скопіюйте private_key ЯК Є з JSON файлу, збережіть подвійні лапки
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----\n"
+
+# Server Configuration
+PORT=3000 
