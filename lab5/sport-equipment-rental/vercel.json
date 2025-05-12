@@ -6,8 +6,11 @@
         "use": "@vercel/node"
       },
       {
-        "src": "dist/**",
-        "use": "@vercel/static"
+        "src": "package.json",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "dist"
+        }
       }
     ],
     "routes": [
@@ -16,24 +19,13 @@
         "dest": "server.js"
       },
       {
-        "src": "/(.*\\.css)",
+        "src": "/assets/(.*)",
         "headers": { "cache-control": "public, max-age=0, must-revalidate" },
-        "dest": "/dist/$1"
+        "dest": "/assets/$1"
       },
       {
         "src": "/(.*)",
-        "dest": "/dist/$1"
-      }
-    ],
-    "headers": [
-      {
-        "source": "/assets/(.*\\.css)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public, max-age=0, must-revalidate"
-          }
-        ]
+        "dest": "/$1"
       }
     ]
 }
