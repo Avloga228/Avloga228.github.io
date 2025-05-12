@@ -27,16 +27,41 @@ try {
   // Якщо файлу немає, перевіряємо змінні середовища
   else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
     console.log('🔥 Initializing Firebase with environment variables');
+    
+    // Виправлення проблеми з форматуванням приватного ключа
+    // Розбираємося з різними форматами, як його могло бути записано
+    let privateKey = process.env.FIREBASE_PRIVATE_KEY;
+    
+    // Якщо ключ з рядковими "\n", перетворюємо їх на фактичні переноси рядків
+    if (privateKey.includes('\\n')) {
+      privateKey = privateKey.replace(/\\n/g, '\n');
+    }
+    
+    // Якщо ключ у лапках, видаляємо їх
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+      privateKey = privateKey.slice(1, -1);
+    }
+    
+    // Переконуємося, що він має правильний формат
+    if (!privateKey.startsWith('-----BEGIN PRIVATE KEY-----')) {
+      console.log('Попередження: Приватний ключ має неправильний формат');
+    }
+    
     const serviceAccount = {
       "type": "service_account",
       "project_id": process.env.FIREBASE_PROJECT_ID,
-      "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      "private_key": privateKey,
       "client_email": process.env.FIREBASE_CLIENT_EMAIL,
       "auth_uri": "https://accounts.google.com/o/oauth2/auth",
       "token_uri": "https://oauth2.googleapis.com/token",
       "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
       "universe_domain": "googleapis.com"
     };
+    
+    // Виведемо частину ключа для діагностики (не повний ключ з міркувань безпеки)
+    const keyStart = privateKey.substring(0, 40) + '...';
+    console.log(`Приватний ключ (частина): ${keyStart}`);
+    
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     });
@@ -250,6 +275,40 @@ app.get('/api/cors-test', (req, res) => {
     timestamp: new Date().toISOString(),
     headers: req.headers
   });
+});
+
+// Додаємо спеціальний маршрут для перевірки з'єднання з Firebase
+app.get('/api/firebase-test', async (req, res) => {
+  try {
+    // Спроба отримати тестовий документ з Firebase
+    // Використовуємо .limit(1) для зменшення навантаження
+    const testQuery = db.collection('inventory').limit(1);
+    console.log('Тестуємо зєднання з Firestore...');
+    
+    const snapshot = await testQuery.get();
+    const testDoc = snapshot.empty ? null : snapshot.docs[0].data();
+    
+    res.json({
+      success: true,
+      message: 'Зєднання з Firebase успішне',
+      data: testDoc ? 'Знайдено тестовий документ' : 'Тестовий документ не знайдено',
+      docCount: snapshot.size,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Помилка зєднання з Firebase:', error);
+    
+    // Відправляємо детальну інформацію про помилку
+    res.status(500).json({
+      success: false,
+      message: 'Помилка зєднання з Firebase',
+      error: error.message,
+      stack: error.stack,
+      code: error.code,
+      details: error.details,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Для всіх інших запитів - відправляємо React додаток
