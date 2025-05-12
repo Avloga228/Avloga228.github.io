@@ -22,11 +22,36 @@ function Rentals() {
     return () => unsubscribe();
   }, []);
 
+  // Функція для обробки відповіді API
+  const processApiResponse = async (response) => {
+    console.log("Відповідь від сервера на запит оренд:", response.status, response.statusText);
+    
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => 'Не вдалося отримати текст помилки');
+      console.error("Помилка від сервера:", errorBody);
+      throw new Error(`Не вдалося отримати дані про оренди: ${response.status} ${response.statusText}`);
+    }
+    
+    let data;
+    try {
+      const text = await response.text();
+      console.log("Відповідь від сервера (текст):", text.substring(0, 200) + (text.length > 200 ? '...' : ''));
+      data = JSON.parse(text);
+    } catch (parseError) {
+      console.error("Помилка розпарсювання JSON:", parseError);
+      throw new Error('Помилка обробки відповіді сервера');
+    }
+    
+    console.log("Отримані дані оренд:", data);
+    return data;
+  };
+
   // Отримання оренд з API
   useEffect(() => {
     const fetchUserRentals = async (userId) => {
       try {
         setLoading(true);
+        
         // Створюємо URL з параметрами фільтрації ціни, якщо вони задані
         let path = `rentals?userId=${userId}`;
         
@@ -38,45 +63,40 @@ function Rentals() {
           path += `&maxPrice=${priceFilter.max}`;
         }
         
+        // Отримуємо URL для запиту
         const requestUrl = apiPath(path);
         console.log("API запит для отримання оренд на URL:", requestUrl);
         
-        // Показати додаткову інформацію про запит
-        console.log('Деталі запиту:', {
-          userId,
-          url: requestUrl,
-          filters: priceFilter
-        });
-        
-        const response = await fetch(requestUrl, {
-          // Змінюємо credentials на 'omit', оскільки ми вже не використовуємо куки
+        // Основні опції запиту
+        const fetchOptions = {
+          method: 'GET',
+          mode: 'cors',
           credentials: 'omit',
           headers: {
-            // Додаємо заголовок для відлагодження
+            'Content-Type': 'application/json',
             'X-Client-Source': 'vercel-frontend'
           }
-        });
+        };
         
-        console.log("Відповідь від сервера на запит оренд:", response.status, response.statusText);
-        
-        if (!response.ok) {
-          const errorBody = await response.text().catch(() => 'Не вдалося отримати текст помилки');
-          console.error("Помилка від сервера:", errorBody);
-          throw new Error(`Не вдалося отримати дані про оренди: ${response.status} ${response.statusText}`);
+        // Додаткова перевірка URL для Vercel
+        let finalUrl = requestUrl;
+        if (window.location.hostname.includes('vercel.app') && 
+            !requestUrl.includes('avloga228-github-io.onrender.com')) {
+          console.error("КРИТИЧНА ПОМИЛКА: Неправильний URL API на Vercel!", {
+            requestUrl,
+            hostname: window.location.hostname
+          });
+          // Виправляємо URL вручну для Vercel
+          finalUrl = `https://avloga228-github-io.onrender.com/api/${path}`;
+          console.log("Виправлений URL:", finalUrl);
+          fetchOptions.headers['X-Client-Source'] = 'vercel-frontend-fixed';
         }
         
-        let data;
-        try {
-          const text = await response.text();
-          console.log("Відповідь від сервера (текст):", text.substring(0, 200) + (text.length > 200 ? '...' : ''));
-          data = JSON.parse(text);
-        } catch (parseError) {
-          console.error("Помилка розпарсювання JSON:", parseError);
-          throw new Error('Помилка обробки відповіді сервера');
-        }
+        // Виконуємо запит
+        const response = await fetch(finalUrl, fetchOptions);
         
-        console.log("Отримані дані оренд:", data);
-        
+        // Обробляємо відповідь і встановлюємо дані
+        const data = await processApiResponse(response);
         setRentedItems(data);
       } catch (error) {
         console.error('Помилка при отриманні орендованих товарів:', error);
@@ -84,7 +104,7 @@ function Rentals() {
         setLoading(false);
       }
     };
-
+    
     if (user) {
       fetchUserRentals(user.uid);
     }

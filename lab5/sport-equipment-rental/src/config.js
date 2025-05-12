@@ -11,8 +11,16 @@ const RENDER_BACKEND_URL = 'https://avloga228-github-io.onrender.com';
 // URL для продакшн-середовища
 const PROD_API_URL = `${RENDER_BACKEND_URL}/api`;
 
-// Експортуємо URL в залежності від середовища
-export const API_URL = isDevelopment ? DEV_API_URL : PROD_API_URL;
+// Визначаємо, на якому хості ми знаходимось
+const isVercel = typeof window !== 'undefined' && window.location.hostname.includes('vercel.app');
+console.log('Запущено на Vercel:', isVercel);
+
+// Якщо ми на Vercel, завжди використовуємо повний URL до Render
+// Якщо ми на Render або локально, використовуємо відносний шлях
+export const API_URL = isVercel 
+  ? PROD_API_URL 
+  : (isDevelopment ? DEV_API_URL : '/api');
+
 console.log('Використовується базовий API URL:', API_URL);
 
 // Допоміжна функція для створення повного URL шляху

@@ -77,46 +77,44 @@ function Equipment() {
     }
     
     const equipmentId = String(item.id).trim();
-    console.log("Відправляємо запит з обладнанням:", {
-      id: equipmentId,
-      name: item.name,
-      type: typeof equipmentId,
-      isEmpty: equipmentId === "",
-      original: item.id
-    });
     
     try {
-      const requestUrl = apiPath('rentals');
+      // Отримуємо базовий URL для запиту
+      let requestUrl = apiPath('rentals');
       console.log("API запит відправляється на URL:", requestUrl);
       
-      // Додаємо деталі запиту для відлагодження
-      console.log("Дані для відправки:", {
-        userId: user.uid,
-        equipmentId,
-        name: item.name,
-        price: item.price
-      });
+      // Додаткова перевірка URL для Vercel
+      if (window.location.hostname.includes('vercel.app') && 
+          !requestUrl.includes('avloga228-github-io.onrender.com')) {
+        console.error("КРИТИЧНА ПОМИЛКА: Неправильний URL API на Vercel!");
+        requestUrl = `https://avloga228-github-io.onrender.com/api/rentals`;
+        console.log("Виправлений URL:", requestUrl);
+      }
       
-      // Використовуємо новий API для створення оренди з розширеними опціями
+      // Дані для відправки
+      const rentalData = {
+        userId: user.uid,
+        equipmentId: equipmentId,
+        name: item.name,
+        price: item.price,
+        date: new Date().toISOString(),
+        status: "очікує оплати",
+        image: item.image,
+        sportType: item.sportType
+      };
+      
+      console.log("Дані для відправки:", rentalData);
+      
+      // Використовуємо новий API для створення оренди
       const response = await fetch(requestUrl, {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          // Додаємо заголовок для відлагодження
           'X-Client-Source': 'vercel-frontend'
         },
-        // Змінюємо credentials на 'omit'
         credentials: 'omit',
-        body: JSON.stringify({
-          userId: user.uid,
-          equipmentId: equipmentId,
-          name: item.name,
-          price: item.price,
-          date: new Date().toISOString(),
-          status: "очікує оплати",
-          image: item.image,
-          sportType: item.sportType
-        }),
+        body: JSON.stringify(rentalData),
       });
 
       console.log("Відповідь від сервера:", response.status, response.statusText);
