@@ -11,6 +11,8 @@ function Rentals() {
   const [rentedItems, setRentedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [priceFilter, setPriceFilter] = useState({ min: '', max: '' });
+  const [tempPriceFilter, setTempPriceFilter] = useState({ min: '', max: '' });
+  const [dbError, setDbError] = useState(null);
   const navigate = useNavigate();
 
   // Відстеження авторизації
@@ -51,6 +53,7 @@ function Rentals() {
     const fetchUserRentals = async (userId) => {
       try {
         setLoading(true);
+        setDbError(null); // Скидаємо помилки при новому запиті
         
         // Створюємо URL з параметрами фільтрації ціни, якщо вони задані
         let path = `rentals?userId=${userId}`;
@@ -100,6 +103,13 @@ function Rentals() {
         setRentedItems(data);
       } catch (error) {
         console.error('Помилка при отриманні орендованих товарів:', error);
+        // Перевіряємо чи це помилка недоступності бази даних
+        if (error.message && error.message.includes('503')) {
+          setDbError({
+            title: 'База даних тимчасово недоступна',
+            message: 'Нажаль, зараз сервіс бази даних не працює. Спробуйте пізніше.'
+          });
+        }
       } finally {
         setLoading(false);
       }
@@ -110,20 +120,22 @@ function Rentals() {
     }
   }, [user, priceFilter]);
 
-  // Обробник зміни фільтрів ціни
+  // Обробник зміни фільтрів ціни - тепер змінюємо тільки тимчасові значення
   const handlePriceFilterChange = (e) => {
     const { name, value } = e.target;
-    setPriceFilter(prev => ({ ...prev, [name]: value }));
+    setTempPriceFilter(prev => ({ ...prev, [name]: value }));
   };
 
-  // Застосування фільтрів
+  // Застосування фільтрів - тепер застосовуємо тимчасові значення
   const applyPriceFilter = (e) => {
     e.preventDefault();
-    // Фільтри застосовуються через effect при зміні priceFilter
+    // Копіюємо значення з тимчасового фільтра до основного
+    setPriceFilter(tempPriceFilter);
   };
 
-  // Скидання фільтрів
+  // Скидання фільтрів - скидаємо обидва стани
   const resetFilters = () => {
+    setTempPriceFilter({ min: '', max: '' });
     setPriceFilter({ min: '', max: '' });
   };
 
@@ -162,6 +174,21 @@ function Rentals() {
     return <div style={{textAlign: "center", marginTop: "40px", color: "#ff782b"}}>Завантаження...</div>;
   }
 
+  if (dbError) {
+    return (
+      <div className="rentals-page">
+        <h1>Мої оренди</h1>
+        <div className="rentals-content">
+          <div className="empty-rentals">
+            <div className="empty-rentals-icon">❌</div>
+            <h2>{dbError.title}</h2>
+            <p>{dbError.message}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) {
     return (
       <div className="rentals-page">
@@ -188,13 +215,19 @@ function Rentals() {
       
       {/* Додаємо фільтр за ціною */}
       <div className="filter-container">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF782B" strokeWidth="2" style={{ marginRight: '8px', verticalAlign: 'text-bottom' }}>
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Фільтрація за ціною
+        </h3>
         <form onSubmit={applyPriceFilter} className="price-filter">
           <div className="filter-group">
             <label>Ціна від:</label>
             <input 
               type="number" 
               name="min" 
-              value={priceFilter.min} 
+              value={tempPriceFilter.min} 
               onChange={handlePriceFilterChange} 
               placeholder="Мін. ціна"
             />
@@ -204,13 +237,26 @@ function Rentals() {
             <input 
               type="number" 
               name="max" 
-              value={priceFilter.max} 
+              value={tempPriceFilter.max} 
               onChange={handlePriceFilterChange} 
               placeholder="Макс. ціна"
             />
           </div>
-          <button type="submit" className="apply-filter">Застосувати</button>
-          <button type="button" className="reset-filter" onClick={resetFilters}>Скинути</button>
+          <button type="submit" className="apply-filter">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '5px' }}>
+              <polyline points="9 10 4 15 9 20" />
+              <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+            </svg>
+            Застосувати
+          </button>
+          <button type="button" className="reset-filter" onClick={resetFilters}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '5px' }}>
+              <path d="M2.5 2v6h6M21.5 22v-6h-6" />
+              <path d="M22 11.5A10 10 0 0 0 3 9" />
+              <path d="M2 13a10 10 0 0 0 18.7 4.4" />
+            </svg>
+            Скинути
+          </button>
         </form>
       </div>
       

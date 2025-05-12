@@ -12,24 +12,30 @@ const __dirname = path.dirname(__filename);
 // Завантаження змінних середовища з .env файлу
 dotenv.config();
 
-// Шлях до файлу сервісного акаунту
-const serviceAccountPath = path.join(__dirname, 'firebase-service-account.json');
+// Спробуємо різні підходи до ініціалізації Firebase
+let firebaseInitialized = false;
 
 try {
-  // Спочатку перевіряємо, чи існує файл сервісного акаунту
+  // 1. Спочатку спробуємо прямо з JSON-файлу
+  const serviceAccountPath = path.join(__dirname, 'firebase-service-account.json');
   if (fs.existsSync(serviceAccountPath)) {
     console.log('🔥 Initializing Firebase with service account JSON file');
     const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     });
-  } 
-  // Якщо файлу немає, перевіряємо змінні середовища
-  else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
+    firebaseInitialized = true;
+  }
+} catch (error) {
+  console.error('Error initializing Firebase from file:', error);
+}
+
+// 2. Якщо перший метод не спрацював, спробуємо з ENV змінних
+if (!firebaseInitialized && process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
+  try {
     console.log('🔥 Initializing Firebase with environment variables');
     
     // Виправлення проблеми з форматуванням приватного ключа
-    // Розбираємося з різними форматами, як його могло бути записано
     let privateKey = process.env.FIREBASE_PRIVATE_KEY;
     
     // Якщо ключ з рядковими "\n", перетворюємо їх на фактичні переноси рядків
@@ -45,6 +51,7 @@ try {
     // Переконуємося, що він має правильний формат
     if (!privateKey.startsWith('-----BEGIN PRIVATE KEY-----')) {
       console.log('Попередження: Приватний ключ має неправильний формат');
+      console.log('Перші 20 символів ключа:', privateKey.substring(0, 20));
     }
     
     const serviceAccount = {
@@ -58,25 +65,40 @@ try {
       "universe_domain": "googleapis.com"
     };
     
-    // Виведемо частину ключа для діагностики (не повний ключ з міркувань безпеки)
-    const keyStart = privateKey.substring(0, 40) + '...';
-    console.log(`Приватний ключ (частина): ${keyStart}`);
-    
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount)
     });
-  } 
-  // Якщо нічого не знайдено, виводимо помилку
-  else {
-    console.error('❌ Firebase credentials not found. Please set up service account JSON file or environment variables.');
-    process.exit(1);
+    
+    firebaseInitialized = true;
+  } catch (error) {
+    console.error('Error initializing Firebase from ENV:', error);
   }
-} catch (error) {
-  console.error('Error initializing Firebase:', error);
-  process.exit(1);
 }
 
-const db = admin.firestore();
+// 3. Якщо нічого не спрацювало, спробуємо спрощений метод без сервісного акаунту
+if (!firebaseInitialized) {
+  try {
+    console.log('🔥 Trying to initialize Firebase with application default credentials');
+    
+    // Спрощена ініціалізація без сервісного акаунту
+    admin.initializeApp({
+      projectId: process.env.FIREBASE_PROJECT_ID || 'sportrent-ba741'
+    });
+    
+    firebaseInitialized = true;
+  } catch (error) {
+    console.error('Error initializing Firebase with default credentials:', error);
+  }
+}
+
+// Якщо нічого не спрацювало, виводимо помилку
+if (!firebaseInitialized) {
+  console.error('❌ Firebase initialization failed with all methods. Check credentials and try again.');
+  console.log('Continuing without Firebase, some features will not work!');
+}
+
+// Ініціалізуємо Firestore, якщо Firebase запустився успішно
+const db = firebaseInitialized ? admin.firestore() : null;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -151,6 +173,16 @@ const authenticate = async (req, res, next) => {
 app.get('/api/rentals', async (req, res) => {
   try {
     console.log('GET /api/rentals, параметри:', req.query);
+    
+    // Перевіряємо чи Firebase ініціалізований
+    if (!firebaseInitialized || !db) {
+      console.error('Firebase не ініціалізовано. Не можемо отримати дані.');
+      return res.status(503).json({ 
+        error: 'Database unavailable', 
+        message: 'Сервіс бази даних тимчасово недоступний. Спробуйте пізніше.' 
+      });
+    }
+    
     const userId = req.query.userId;
     const minPrice = parseInt(req.query.minPrice) || 0;
     const maxPrice = parseInt(req.query.maxPrice) || Infinity;
@@ -194,6 +226,15 @@ app.get('/api/rentals', async (req, res) => {
 // Маршрут для збереження інформації про оренду обладнання
 app.post('/api/rentals', async (req, res) => {
   try {
+    // Перевіряємо чи Firebase ініціалізований
+    if (!firebaseInitialized || !db) {
+      console.error('Firebase не ініціалізовано. Не можемо зберегти дані.');
+      return res.status(503).json({ 
+        error: 'Database unavailable', 
+        message: 'Сервіс бази даних тимчасово недоступний. Спробуйте пізніше.' 
+      });
+    }
+    
     const { userId, equipmentId, name, price, date, status, image, sportType } = req.body;
 
     // Додаткове логування
@@ -277,9 +318,20 @@ app.get('/api/cors-test', (req, res) => {
   });
 });
 
-// Додаємо спеціальний маршрут для перевірки з'єднання з Firebase
+// Додаємо спеціальний маршрут для перевірки зєднання з Firebase
 app.get('/api/firebase-test', async (req, res) => {
   try {
+    // Перевіряємо чи Firebase ініціалізований
+    if (!firebaseInitialized || !db) {
+      return res.status(503).json({
+        success: false,
+        message: 'Firebase не ініціалізовано',
+        initialized: firebaseInitialized,
+        dbAvailable: !!db,
+        timestamp: new Date().toISOString()
+      });
+    }
+    
     // Спроба отримати тестовий документ з Firebase
     // Використовуємо .limit(1) для зменшення навантаження
     const testQuery = db.collection('inventory').limit(1);

@@ -16,6 +16,7 @@ function Equipment() {
   const [filteredEquipment, setFilteredEquipment] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dbError, setDbError] = useState(null);
 
   // Відстеження авторизації
   useEffect(() => {
@@ -120,6 +121,11 @@ function Equipment() {
       console.log("Відповідь від сервера:", response.status, response.statusText);
 
       if (!response.ok) {
+        // Перевіряємо чи це помилка недоступності бази даних
+        if (response.status === 503) {
+          throw new Error('Database unavailable: Сервіс бази даних тимчасово недоступний');
+        }
+        
         // Спробуємо отримати повний текст відповіді для відлагодження
         const errorText = await response.text().catch(e => 'Не вдалося прочитати відповідь');
         console.error("Текст помилки від сервера:", errorText);
@@ -149,7 +155,13 @@ function Equipment() {
       
     } catch (e) {
       console.error("Помилка при збереженні оренди:", e);
-      alert("Помилка при збереженні оренди: " + e.message);
+      
+      // Показуємо різні повідомлення в залежності від типу помилки
+      if (e.message.includes('Database unavailable')) {
+        alert("Сервіс бази даних тимчасово недоступний. Спробуйте пізніше.");
+      } else {
+        alert("Помилка при збереженні оренди: " + e.message);
+      }
     }
   };
 
