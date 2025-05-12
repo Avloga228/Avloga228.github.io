@@ -5,6 +5,7 @@ import { auth, db } from "../firebase";
 import { collection, doc, deleteDoc, updateDoc, increment } from "firebase/firestore";
 import { apiPath } from '../config';
 import './Rentals.css';
+import './RentalsFilter.css';
 
 function Rentals() {
   const [user, setUser] = useState(undefined);
@@ -214,7 +215,14 @@ function Rentals() {
       <h1>Мої оренди</h1>
       
       {/* Додаємо фільтр за ціною */}
-      <div className="filter-container">
+      <div className="filter-container rentals-filters" style={{
+        margin: "20px 0 30px",
+        background: "linear-gradient(145deg, #ffffff, #f7f8f9)",
+        padding: "22px 25px",
+        borderRadius: "12px",
+        boxShadow: "0 4px 15px rgba(0, 0, 0, 0.08)",
+        border: "1px solid #eaeaea"
+      }}>
         <h3>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF782B" strokeWidth="2" style={{ marginRight: '8px', verticalAlign: 'text-bottom' }}>
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
@@ -222,34 +230,80 @@ function Rentals() {
           Фільтрація за ціною
         </h3>
         <form onSubmit={applyPriceFilter} className="price-filter">
-          <div className="filter-group">
-            <label>Ціна від:</label>
+          <div className="filter-group" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <label style={{ fontWeight: "500", color: "#444", minWidth: "70px" }}>Ціна від:</label>
             <input 
               type="number" 
               name="min" 
               value={tempPriceFilter.min} 
               onChange={handlePriceFilterChange} 
               placeholder="Мін. ціна"
+              style={{
+                padding: "12px 15px",
+                border: "1px solid #e0e0e0",
+                borderRadius: "8px",
+                width: "110px",
+                backgroundColor: "#ffffff",
+                color: "#333",
+                fontSize: "0.95rem",
+                boxShadow: "inset 0 1px 3px rgba(0, 0, 0, 0.05)"
+              }}
             />
           </div>
-          <div className="filter-group">
-            <label>до:</label>
+          <div className="filter-group" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <label style={{ fontWeight: "500", color: "#444", minWidth: "70px" }}>до:</label>
             <input 
               type="number" 
               name="max" 
               value={tempPriceFilter.max} 
               onChange={handlePriceFilterChange} 
               placeholder="Макс. ціна"
+              style={{
+                padding: "12px 15px",
+                border: "1px solid #e0e0e0",
+                borderRadius: "8px",
+                width: "110px",
+                backgroundColor: "#ffffff",
+                color: "#333",
+                fontSize: "0.95rem",
+                boxShadow: "inset 0 1px 3px rgba(0, 0, 0, 0.05)"
+              }}
             />
           </div>
-          <button type="submit" className="apply-filter">
+          <button type="submit" className="apply-filter" style={{
+            padding: "12px 20px",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontWeight: "600",
+            fontSize: "0.95rem",
+            transition: "all 0.3s ease",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#ff782b",
+            color: "white"
+          }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '5px' }}>
               <polyline points="9 10 4 15 9 20" />
               <path d="M20 4v7a4 4 0 0 1-4 4H4" />
             </svg>
             Застосувати
           </button>
-          <button type="button" className="reset-filter" onClick={resetFilters}>
+          <button type="button" className="reset-filter" onClick={resetFilters} style={{
+            padding: "12px 20px",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontWeight: "600",
+            fontSize: "0.95rem",
+            transition: "all 0.3s ease",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#f3f3f3",
+            color: "#555"
+          }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '5px' }}>
               <path d="M2.5 2v6h6M21.5 22v-6h-6" />
               <path d="M22 11.5A10 10 0 0 0 3 9" />
