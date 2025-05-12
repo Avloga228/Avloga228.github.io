@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { collection, doc, deleteDoc, updateDoc, increment } from "firebase/firestore";
+import { apiPath } from '../config';
 import './Rentals.css';
 
 function Rentals() {
@@ -27,17 +28,17 @@ function Rentals() {
       try {
         setLoading(true);
         // Створюємо URL з параметрами фільтрації ціни, якщо вони задані
-        let url = `/api/rentals?userId=${userId}`;
+        let path = `rentals?userId=${userId}`;
         
         if (priceFilter.min) {
-          url += `&minPrice=${priceFilter.min}`;
+          path += `&minPrice=${priceFilter.min}`;
         }
         
         if (priceFilter.max) {
-          url += `&maxPrice=${priceFilter.max}`;
+          path += `&maxPrice=${priceFilter.max}`;
         }
         
-        const response = await fetch(url);
+        const response = await fetch(apiPath(path));
         if (!response.ok) {
           throw new Error('Не вдалося отримати дані про оренди');
         }

@@ -5,6 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { collection, getDocs, doc, updateDoc, increment } from "firebase/firestore";
 import './Equipment.css';
+import { apiPath } from '../config';
 
 function Equipment() {
   const [equipment, setEquipment] = useState([]);
@@ -87,7 +88,7 @@ function Equipment() {
     try {
       console.log("Відправляємо запит з ID:", equipmentId, "Тип:", typeof equipmentId);
       // Використовуємо новий API для створення оренди
-      const response = await fetch('/api/rentals', {
+      const response = await fetch(apiPath('rentals'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
