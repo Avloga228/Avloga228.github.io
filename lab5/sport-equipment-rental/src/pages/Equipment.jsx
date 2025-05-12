@@ -86,9 +86,10 @@ function Equipment() {
     });
     
     try {
-      console.log("Відправляємо запит з ID:", equipmentId, "Тип:", typeof equipmentId);
+      const requestUrl = apiPath('rentals');
+      console.log("API запит відправляється на URL:", requestUrl);
       // Використовуємо новий API для створення оренди
-      const response = await fetch(apiPath('rentals'), {
+      const response = await fetch(requestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

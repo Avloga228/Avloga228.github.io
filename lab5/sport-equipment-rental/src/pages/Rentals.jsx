@@ -38,7 +38,10 @@ function Rentals() {
           path += `&maxPrice=${priceFilter.max}`;
         }
         
-        const response = await fetch(apiPath(path));
+        const requestUrl = apiPath(path);
+        console.log("API запит для отримання оренд на URL:", requestUrl);
+        
+        const response = await fetch(requestUrl);
         if (!response.ok) {
           throw new Error('Не вдалося отримати дані про оренди');
         }
