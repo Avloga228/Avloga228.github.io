@@ -56,8 +56,15 @@ const db = admin.firestore();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Розширені CORS налаштування для дозволу запитів з Vercel 
+const corsOptions = {
+  origin: ['http://localhost:5173', 'https://avloga228-github-io-w8hi.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'dist')));
 
