@@ -41,12 +41,27 @@ function Rentals() {
         const requestUrl = apiPath(path);
         console.log("API запит для отримання оренд на URL:", requestUrl);
         
-        const response = await fetch(requestUrl);
+        const response = await fetch(requestUrl, {
+          // Додаємо credentials для кук крос-доменно
+          credentials: 'include',
+          headers: {
+            // Додаємо заголовок для відлагодження
+            'X-Client-Source': 'vercel-frontend'
+          }
+        });
+        
+        console.log("Відповідь від сервера на запит оренд:", response.status, response.statusText);
+        
         if (!response.ok) {
           throw new Error('Не вдалося отримати дані про оренди');
         }
         
-        const data = await response.json();
+        const data = await response.json().catch(e => {
+          console.error("Помилка розпарсювання JSON:", e);
+          return [];
+        });
+        console.log("Отримані дані оренд:", data);
+        
         setRentedItems(data);
       } catch (error) {
         console.error('Помилка при отриманні орендованих товарів:', error);

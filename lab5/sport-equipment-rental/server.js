@@ -58,15 +58,33 @@ const PORT = process.env.PORT || 3000;
 
 // Розширені CORS налаштування для дозволу запитів з Vercel 
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://avloga228-github-io-w8hi.vercel.app'],
+  origin: function (origin, callback) {
+    const allowedOrigins = ['http://localhost:5173', 'https://avloga228-github-io-w8hi.vercel.app'];
+    console.log('Запит від:', origin);
+    
+    // Приймати запити без 'origin', як у разі локальних викликів
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('Запит із недозволеного джерела:', origin);
+      callback(null, true); // Тимчасово приймаємо всі запити для відлагодження
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 };
 
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'dist')));
+
+// Логування запитів
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} від ${req.headers.origin || 'невідомо'}`);
+  next();
+});
 
 // Тестовий GET-маршрут для перевірки роботи сервера
 app.get('/test', (req, res) => {
@@ -217,6 +235,20 @@ app.post('/api/rentals', async (req, res) => {
     console.error('Error creating rental:', error);
     res.status(500).json({ error: `Failed to create rental: ${error.message}` });
   }
+});
+
+// Додаємо спеціальний маршрут для перевірки CORS
+app.get('/api/cors-test', (req, res) => {
+  // Виводимо всі заголовки запиту для відлагодження
+  console.log('CORS Test Headers:', req.headers);
+  
+  res.json({
+    success: true,
+    message: 'CORS налаштовано правильно',
+    client: req.headers.origin || 'невідомий',
+    timestamp: new Date().toISOString(),
+    headers: req.headers
+  });
 });
 
 // Для всіх інших запитів - відправляємо React додаток

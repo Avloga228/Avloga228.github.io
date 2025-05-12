@@ -1,5 +1,6 @@
 // Конфігурація API URL в залежності від середовища
 const isDevelopment = import.meta.env.DEV;
+console.log('Середовище розробки:', isDevelopment ? 'Development' : 'Production');
 
 // URL для локальної розробки
 const DEV_API_URL = 'http://localhost:3000/api';
@@ -14,11 +15,13 @@ const PROD_API_URL = RENDER_BACKEND_URL + '/api';
 
 // Експортуємо URL в залежності від середовища
 export const API_URL = isDevelopment ? DEV_API_URL : PROD_API_URL;
+console.log('Використовується API URL:', API_URL);
 
 // Допоміжна функція для створення повного URL шляху
 export const apiPath = (path) => {
   // Видаляємо початковий слеш, якщо він є, щоб уникнути дублювання
   const trimmedPath = path.startsWith('/') ? path.substring(1) : path;
-  
-  return `${API_URL}/${trimmedPath}`;
+  const fullUrl = `${API_URL}/${trimmedPath}`;
+  console.log('Сформований URL для запиту:', fullUrl);
+  return fullUrl;
 }; 

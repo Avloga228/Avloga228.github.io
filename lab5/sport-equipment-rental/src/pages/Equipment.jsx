@@ -88,12 +88,16 @@ function Equipment() {
     try {
       const requestUrl = apiPath('rentals');
       console.log("API запит відправляється на URL:", requestUrl);
-      // Використовуємо новий API для створення оренди
+      // Використовуємо новий API для створення оренди з розширеними опціями
       const response = await fetch(requestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          // Додаємо заголовок для відлагодження
+          'X-Client-Source': 'vercel-frontend'
         },
+        // Додаємо credentials для кук крос-доменно
+        credentials: 'include',
         body: JSON.stringify({
           userId: user.uid,
           equipmentId: equipmentId,
@@ -106,8 +110,11 @@ function Equipment() {
         }),
       });
 
+      console.log("Відповідь від сервера:", response.status, response.statusText);
+
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(e => ({ error: 'Не вдалося розпарсити відповідь' }));
+        console.error("Помилка від API:", errorData);
         throw new Error(errorData.error || 'Помилка при створенні оренди');
       }
 
