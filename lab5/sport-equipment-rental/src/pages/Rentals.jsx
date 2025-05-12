@@ -41,9 +41,16 @@ function Rentals() {
         const requestUrl = apiPath(path);
         console.log("API запит для отримання оренд на URL:", requestUrl);
         
+        // Показати додаткову інформацію про запит
+        console.log('Деталі запиту:', {
+          userId,
+          url: requestUrl,
+          filters: priceFilter
+        });
+        
         const response = await fetch(requestUrl, {
-          // Додаємо credentials для кук крос-доменно
-          credentials: 'include',
+          // Змінюємо credentials на 'omit', оскільки ми вже не використовуємо куки
+          credentials: 'omit',
           headers: {
             // Додаємо заголовок для відлагодження
             'X-Client-Source': 'vercel-frontend'
@@ -53,13 +60,21 @@ function Rentals() {
         console.log("Відповідь від сервера на запит оренд:", response.status, response.statusText);
         
         if (!response.ok) {
-          throw new Error('Не вдалося отримати дані про оренди');
+          const errorBody = await response.text().catch(() => 'Не вдалося отримати текст помилки');
+          console.error("Помилка від сервера:", errorBody);
+          throw new Error(`Не вдалося отримати дані про оренди: ${response.status} ${response.statusText}`);
         }
         
-        const data = await response.json().catch(e => {
-          console.error("Помилка розпарсювання JSON:", e);
-          return [];
-        });
+        let data;
+        try {
+          const text = await response.text();
+          console.log("Відповідь від сервера (текст):", text.substring(0, 200) + (text.length > 200 ? '...' : ''));
+          data = JSON.parse(text);
+        } catch (parseError) {
+          console.error("Помилка розпарсювання JSON:", parseError);
+          throw new Error('Помилка обробки відповіді сервера');
+        }
+        
         console.log("Отримані дані оренд:", data);
         
         setRentedItems(data);

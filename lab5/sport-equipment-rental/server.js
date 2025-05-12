@@ -56,22 +56,11 @@ const db = admin.firestore();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Розширені CORS налаштування для дозволу запитів з Vercel 
+// Розширені CORS налаштування
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = ['http://localhost:5173', 'https://avloga228-github-io-w8hi.vercel.app'];
-    console.log('Запит від:', origin);
-    
-    // Приймати запити без 'origin', як у разі локальних викликів
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log('Запит із недозволеного джерела:', origin);
-      callback(null, true); // Тимчасово приймаємо всі запити для відлагодження
-    }
-  },
+  origin: '*', // Тимчасово дозволяю всі домени для відлагодження
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Client-Source'],
   credentials: true
 };
 
@@ -136,32 +125,44 @@ const authenticate = async (req, res, next) => {
 // Маршрут для отримання орендованого обладнання з фільтрацією за ціною
 app.get('/api/rentals', async (req, res) => {
   try {
+    console.log('GET /api/rentals, параметри:', req.query);
     const userId = req.query.userId;
     const minPrice = parseInt(req.query.minPrice) || 0;
     const maxPrice = parseInt(req.query.maxPrice) || Infinity;
 
     if (!userId) {
+      console.log('GET /api/rentals - Помилка: Не вказано userId');
       return res.status(400).json({ error: 'User ID is required' });
     }
 
+    console.log(`GET /api/rentals - Пошук оренд для userId: ${userId}, ціновий діапазон: ${minPrice}-${maxPrice}`);
+
     // Отримуємо дані з Firebase
-    const rentalsRef = db.collection('rentals');
-    const query = rentalsRef.where('userId', '==', userId);
-    const snapshot = await query.get();
+    try {
+      const rentalsRef = db.collection('rentals');
+      const query = rentalsRef.where('userId', '==', userId);
+      console.log('Виконуємо запит до Firebase...');
+      const snapshot = await query.get();
+      console.log(`Firebase повернув ${snapshot.size} документів`);
 
-    // Фільтруємо результати за ціною
-    const rentals = [];
-    snapshot.forEach(doc => {
-      const rental = { id: doc.id, ...doc.data() };
-      if (rental.price >= minPrice && rental.price <= maxPrice) {
-        rentals.push(rental);
-      }
-    });
+      // Фільтруємо результати за ціною
+      const rentals = [];
+      snapshot.forEach(doc => {
+        const rental = { id: doc.id, ...doc.data() };
+        if (rental.price >= minPrice && rental.price <= maxPrice) {
+          rentals.push(rental);
+        }
+      });
 
-    res.json(rentals);
+      console.log(`Після фільтрації за ціною залишилось ${rentals.length} оренд`);
+      res.json(rentals);
+    } catch (firestoreError) {
+      console.error('Помилка доступу до Firestore:', firestoreError);
+      return res.status(500).json({ error: 'Database access error', details: firestoreError.message });
+    }
   } catch (error) {
-    console.error('Error fetching rentals:', error);
-    res.status(500).json({ error: 'Failed to fetch rentals' });
+    console.error('Загальна помилка при отриманні оренд:', error);
+    res.status(500).json({ error: 'Failed to fetch rentals', details: error.message });
   }
 });
 

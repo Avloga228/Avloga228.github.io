@@ -88,6 +88,15 @@ function Equipment() {
     try {
       const requestUrl = apiPath('rentals');
       console.log("API запит відправляється на URL:", requestUrl);
+      
+      // Додаємо деталі запиту для відлагодження
+      console.log("Дані для відправки:", {
+        userId: user.uid,
+        equipmentId,
+        name: item.name,
+        price: item.price
+      });
+      
       // Використовуємо новий API для створення оренди з розширеними опціями
       const response = await fetch(requestUrl, {
         method: 'POST',
@@ -96,8 +105,8 @@ function Equipment() {
           // Додаємо заголовок для відлагодження
           'X-Client-Source': 'vercel-frontend'
         },
-        // Додаємо credentials для кук крос-доменно
-        credentials: 'include',
+        // Змінюємо credentials на 'omit'
+        credentials: 'omit',
         body: JSON.stringify({
           userId: user.uid,
           equipmentId: equipmentId,
@@ -113,9 +122,16 @@ function Equipment() {
       console.log("Відповідь від сервера:", response.status, response.statusText);
 
       if (!response.ok) {
-        const errorData = await response.json().catch(e => ({ error: 'Не вдалося розпарсити відповідь' }));
-        console.error("Помилка від API:", errorData);
-        throw new Error(errorData.error || 'Помилка при створенні оренди');
+        // Спробуємо отримати повний текст відповіді для відлагодження
+        const errorText = await response.text().catch(e => 'Не вдалося прочитати відповідь');
+        console.error("Текст помилки від сервера:", errorText);
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          throw new Error(errorData.error || errorData.details || 'Помилка при створенні оренди');
+        } catch (jsonError) {
+          throw new Error(`Помилка при створенні оренди: ${response.status} ${response.statusText}`);
+        }
       }
 
       // Оновлюємо локальний стан (щоб не чекати повторного fetch)
