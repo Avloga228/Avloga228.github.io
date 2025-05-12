@@ -315,7 +315,7 @@
   text-decoration: underline;
 }
 
-/* Адаптивні стилі */
+/* Адаптивні стилі для смартфонів*/
 @media (max-width: 768px) {
   .rentals-page {
     padding: 1rem;
